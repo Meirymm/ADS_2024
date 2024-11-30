@@ -1,0 +1,151 @@
+A hash table is a data structure used for fast lookup, insertion, and deletion of key-value pairs. It uses a hash function to convert a key into an index in an array, where the value is stored. Simply put, it maps keys to their values.In a hash table, lookup, insertion, and deletion typically take O(1) time. In the worst case, these operations can take O(n).                                                                                                                  Rabin-Karp Algorithm: A string search algorithm that uses hash values to find patterns in O(n+m) on average. In the worst case, these algorithm can take O(nm).       Efficient for multiple pattern matching.Steps:
+Compute the hash value of the pattern
+Compare the hash of the current substring in the text
+If hashes match, verify the substring directly                                          KMP is an algorithm for substring searching that speeds up the process by avoiding unnecessary comparisons. It pre-processes the pattern (substring) to quickly find matches.Steps of the Algorithm:
+Build the π-table for the pattern.
+Compare the characters of the text with the characters of the pattern.
+In case of a mismatch, shift based on the π-table.
+Time Complexity:
+Building the π-table: O(m), where m is the length of the pattern.
+Substring search: O(n), where n is the length of the text.
+Overall complexity: O(n + m).                                                                             A graph is a non-linear data structure consisting of nodes and edges. Nodes are sometimes also called vertices.A graph can be represented mainly in two ways. These include:1.Adjacency List
+This is a way of representing a graph where for each vertex, a list of its neighbors is stored.
+Advantages: Saves memory, especially for sparse graphs.
+Disadvantages: Searching for a connection between vertices can be slow (O(k), where k is the number of neighbors).
+2.Adjacency Matrix
+This is a 2D matrix where the element at position (i, j) indicates whether there is an edge between vertices i and j (1 means there is an edge, 0 means there is no edge).
+Advantages: Fast access to edges (O(1)).
+Disadvantages: Takes up a lot of memory, especially for sparse graphs.            Edge List
+
+An edge list is a way to represent a graph by storing each edge as a pair of vertices (u, v), where u and v are the connected vertices.
+Advantages:
+Simple and easy to use.
+Easy to add or remove edges. Disadvantages:
+Not suitable for finding neighbors.                                                                      BFS (Breadth-First Search) is an algorithm for crawling or searching a graph.
+What it is:
+
+BFS is an algorithm for traversing a graph that visits neighbors of the current vertex level by level.
+Main Steps:
+Start with the initial vertex and add it to the queue.
+Repeat:
+Dequeue a vertex from the front of the queue.
+Visit all its unvisited neighbors and add them to the queue.
+Applications:
+Finding the shortest path in an unweighted graph.
+Checking if a graph is connected.
+Time Complexity:
+O(V + E), where V is the number of vertices and E is the number of edges.
+Example:
+
+Imagine a graph with vertices A, B, C, D, and E, where edges connect A-B, A-C, B-D, C-E.
+
+Starting from vertex A, BFS would visit vertices in this order: A → B → C → D → E.       Lecture 8: Hash Tables
+Pseudocode for inserting a key-value pair in a hash table:
+plaintextКопировать кодfunction insert(hashTable, key, value):
+    index = hashFunction(key)  // Compute the index for the key
+    if hashTable[index] is empty:
+        hashTable[index] = (key, value)  // Insert the key-value pair
+    else:
+        // Handle collision (e.g., with chaining or open addressing)
+        resolveCollision(hashTable, index, key, value)
+Pseudocode for searching a key in a hash table:
+plaintextКопировать кодfunction search(hashTable, key):
+    index = hashFunction(key)  // Compute the index for the key
+    if hashTable[index] is not empty:
+        if hashTable[index].key == key:
+            return hashTable[index].value  // Return the value associated with the key
+    return "Key not found"
+Rabin-Karp Algorithm (Based on Hash Calculation)
+Pseudocode for Rabin-Karp String Search:
+plaintextКопировать кодfunction rabinKarp(text, pattern):
+    m = length(pattern)
+    n = length(text)
+    patternHash = hash(pattern)  // Compute hash of the pattern
+    textHash = hash(text[0...m-1])  // Compute hash of the first substring of text
+    for i = 0 to n - m:
+        if textHash == patternHash:
+            if text[i...i+m-1] == pattern:  // Check if strings match
+                return i  // Pattern found at index i
+        if i < n - m:
+            textHash = rehash(textHash, text[i], text[i+m])  // Update text hash for next substring
+    return "Pattern not found"
+Lecture 9: Knuth-Morris-Pratt Algorithm
+Pseudocode for KMP String Search:
+plaintextКопировать кодfunction KMP(text, pattern):
+    m = length(pattern)
+    n = length(text)
+    lps = computeLPS(pattern)  // Compute longest prefix-suffix (LPS) array
+    i = 0  // Pointer for text
+    j = 0  // Pointer for pattern
+    while i < n:
+        if text[i] == pattern[j]:
+            i += 1
+            j += 1
+        if j == m:
+            return i - j  // Pattern found at index i - j
+        elif i < n and text[i] != pattern[j]:
+            if j != 0:
+                j = lps[j-1]  // Use the LPS array to shift the pattern
+            else:
+                i += 1
+    return "Pattern not found"
+function computeLPS(pattern):
+    m = length(pattern)
+    lps = array of size m
+    length = 0
+    i = 1
+    while i < m:
+        if pattern[i] == pattern[length]:
+            length += 1
+            lps[i] = length
+            i += 1
+        else:
+            if length != 0:
+                length = lps[length - 1]
+            else:
+                lps[i] = 0
+                i += 1
+    return lps
+Lecture 10: Graph Representations
+Pseudocode for Adjacency List:
+plaintextКопировать код// Initialize an adjacency list
+function initializeAdjacencyList(vertices):
+    adjList = empty list
+    for each vertex in vertices:
+        adjList[vertex] = empty list
+// Add an edge between vertex u and vertex v
+function addEdge(adjList, u, v):
+    adjList[u].append(v)
+    adjList[v].append(u)  // For undirected graph
+Pseudocode for Adjacency Matrix:
+plaintextКопировать код// Initialize an adjacency matrix
+function initializeAdjacencyMatrix(vertices):
+    matrix = 2D array of size vertices x vertices
+    for each i in range(vertices):
+        for each j in range(vertices):
+            matrix[i][j] = 0  // No edge initially
+// Add an edge between vertex u and vertex v
+function addEdge(matrix, u, v):
+    matrix[u][v] = 1
+    matrix[v][u] = 1  // For undirected graph
+Pseudocode for Edge List:
+plaintextКопировать код// Initialize an empty edge list
+function initializeEdgeList():
+    edgeList = empty list
+// Add an edge between vertex u and vertex v
+function addEdge(edgeList, u, v):
+    edgeList.append((u, v))  // Add the edge as a pair (u, v)
+Pseudocode for BFS (Breadth-First Search):
+plaintextКопировать кодfunction BFS(graph, startVertex):
+    queue = empty queue
+    visited = empty set
+    queue.enqueue(startVertex)
+    visited.add(startVertex)
+    while queue is not empty:
+        vertex = queue.dequeue()
+        process(vertex)  // Perform operations on the vertex (e.g., print it)
+        for each neighbor of vertex:
+            if neighbor is not in visited:
+                visited.add(neighbor)
+                queue.enqueue(neighbor)
+ 
